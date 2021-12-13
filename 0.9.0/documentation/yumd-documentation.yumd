@@ -11,57 +11,132 @@ bibliography: bibliography.bib
 latex:
   toc: true
 ...
-YuMD is an extension of Markdown allowing for the typesetting of rich and complex notes, with first-class support for flashcard creation from directly within your notes. YuMD lets you to
+# TL;DR
+YuMD is an extension of Markdown allowing for the typesetting of rich and complex notes, with first-class support for flashcard creation from directly within your notes. YuMD lets you
 1. create and directly sync flaschards between `.yumd` notes and Anki, avoiding the need to write out notes multiple times,
 1. export notes into LaTeX to create well-typeset PDFs, and
 1. (for advanced users) export notes into HTML files for further processing.
 
-The documentation for YuMD is itself written in YuMD, and can be viewed [here]().
+The documentation for YuMD is itself written in YuMD, and can be viewed [as a PDF](https://nbviewer.org/github/fiercedeity-productions/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.pdf), or [as YuMD source code](https://github.com/fiercedeity-productions/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.yumd).
+
+Note. #indentation
+: Like Python, Markdown, and especially YuMD, relies critically on correct indentation to determine the structure of your notes. Make sure things are aligned correctly. Importantly, it is **strongly recommended to spaces rather than tabs to indent**. YuMD treats all tab characters as `4` spaces, which can easily lead to misunderstanding between you and the parser. **It may help to enable `Indent Using Spaces`, specifically `2` spaces in VSCode** (don't worry: this setting will be specific to `.yumd` files and you won't need to constantly switch indentation settings whenever you work with other files).
+
+Example (the importance of correct indentation).
+: Correct indentation allows you to create complex and nested structures in your document. How much indentation is required is quite intuitive within YuMD. For example, to create multiple paragraphs within a list item, each paragraph must begin at the same level of indentation as the first paragraph. The following example combined with some experimenting by yourself should be enough for a solid understanding:
++ + ```
+    1. a list
+    1. with a complex list
+       item,
+
+       containing multiple
+       paragraphs, and a
+       theorem:
+  
+       Theorem.
+       : The statement
+         "indentation does
+         not matter" is false.
+  
+       Proof.
+       : Attempting the
+         following will not
+         produce a theorem
+         within a list, since
+         the `:` is not
+         indented far enough:
+  
+         1. Hi
+  
+            Proposition.
+          : This will not work
+
+            Propsition
+            : while this will.
+    ```
+  + 1. a list
+    1. with a complex list
+       item,
+
+       containing multiple
+       paragraphs, and a
+       theorem:
+  
+       Theorem.
+       : The statement
+         "indentation does
+         not matter" is false.
+  
+       Proof.
+       : Attempting the
+         following will not
+         produce a theorem
+         within a list, since
+         the `:` is not
+         indented far enough:
+  
+         1. Hi
+  
+            Proposition.
+          : This will not work
+
+            Propsition
+            : while this will.
+
+Tip.
+: If line wrapping is enabled in the text editor, levels of displayed indentation could become misleading. It is recommended to set the VSCode setting `Editor: Render Whitespaces` to `selection` to help identify the actual number of spaces in the file.
+
+Note.
+: For those new to Markdown, [this page](https://commonmark.org/help/) provides a quick reference to basic syntax. YuMD extends this to allow for much more complex note creation. This is detailed in [#yumd-syntax].
+
+A full reading of this documentation is recommended if you want to leverage the full potential of YuMD, but if you are short on time, it is essential to read
+1. [#sending-to-anki] and
+1. [#defining-anki-flashcards].
+
+A skim through
+1. [#configuration] and
+1. [#yumd-syntax] is also highly recommended.
 
 # Introduction
 ## Why?
 YuMD was created as a solution to the following trilemma.
 
-Proposition (Trilemma of notetaking).
-: It is impossible to have the following three at the same time from the same base of notes:
+Proposition (Trilemma of notetaking). #trilemma
+: It is impossible to have the following conditions at the same time from the same base of notes:
   1. good formatting, preferably in pdf form (such as using LaTeX)
   1. flashcard form
   1. fast notetaking with support for complex elements including tables, theorems, figures, etc.
 
-Existing solutions only allow for up to two of these at one time:
-1. Notion's intuitive UI allows for quick notetaking with mildly good-looking formatting but offers no way of producing flashcards
-1. Remnote allows for fast notetaking with first-class support for flashcard creation, but has an ugly UI, ugly formatting, and offers no way of collating all notes in one document
-1. pandoc, like Notion, has no flashcard support
+Proof (Partial disproof).
+: While highly imperfect, and undoubtedly full of small bugs, YuMD attempts to solve this.
 
-Some solutions are even worse and only satisfy one of the three conditions:
-1. vanilla markdown is hugely limited and has substandard or non-existent support for tables, theorems, and many other things necessary for rich notes
-1. LaTeX creates good-looking documents but is a pain to type and complex formatting requires complex workarounds (such as nested tables)
+Existing solutions only allow for up to two conditions in [#trilemma] at one time:
+1. [Notion's](https://www.notion.so/) intuitive UI allows for quick notetaking with mildly good-looking formatting but offers no way of producing flashcards,
+1. [Remnote](https://www.remnote.com/) allows for fast notetaking with first-class support for flashcard creation, but has an ugly UI, ugly formatting, and offers no way of collating all notes in one document, while
+1. [pandoc](https://pandoc.org/), which offers a highly-customisable version of markdown and can convert to many file types include PDFs and Word documents, has no flashcard support, like Notion.
 
+Some solutions are even worse and only satisfy one conditions:
+1. "vanilla" markdown ([CommonMark](https://commonmark.org/), [Github Flavoured Markdown](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), etc.) is hugely limited and has substandard or non-existent support for tables, theorems, and many other things necessary for rich notes, while
+1. using pure LaTeX creates good-looking documents and allows you to create highly complex documents, but is a pain to type, and complex formatting requires complex workarounds and hours of hair pulling (cough cough nested tables cough cough).
 
 Until now, the most realistic solution has been to create multiple copies of notes: once in a notetaking programme such as Notion or directly LaTeX, and again by *rewriting all the notes* in Anki.
 
-YuMD aims to solve this, first by extending markdown to include theorems, tables, footnotes, citations, references, and other important features. YuMD then provides options to:
-1. computationally generate LaTeX code, savings huge amounts of typing and debugging time
-1. identify, send and sync flashcards to Anki from within your notes
+YuMD aims to solve this by
+1. extending markdown to include theorems, tables, footnotes, citations, references, and other important features (see [#ext-syntax]), and
+1. offering functionality to:
+   1. computationally generate LaTeX (and HTML) code, saving huge amounts of time typing, debugging, and searching Stack Overflow, and
+   1. identify, send and sync flashcards to Anki from within your notes.
 
-In sum, YuMD allows for complex and rich note content, while providing first class support for flashcard creation.
-
-At the same time, YuMD's LaTeX output allows you to create a good-looking final document while skipping the hair-pulling involved in writing actual LaTeX. For this reason, YuMD is a suitable program for writing reports and thus also useful for those who aren't interested in flashcards.
+In sum, YuMD allows for complex and rich note content, while providing first class support for flashcard creation. At the same time, YuMD's LaTeX output allows you to create a good-looking final document while skipping the hair-pulling involved in writing actual LaTeX. YuMD is thus also useful for those who do not need the flashcard feature: typesetting reports and supervision work is a breeze with YuMD.
 
 ## What?
 The term YuMD refers to the broad notetaking system outlined above. Physically, it also refers to the file type `.yumd` (although all text files are accepted by YuMD regardless of the extension), and its physical manifestation as a computer program.
 
 As a computer program, YuMD is a C++ library compiled for Windows (`yumd.dll`) and macOS (`libyumd_osx_intel.dylib`). YuMD ships with:
-1. an executable (`yumd.exe` and `yumd_osx_intel`), which provides a command-line interface to this library, and
+1. an executable (`yumd.exe` and `yumd_osx_intel`), which provides a command-line interface to this library,[^I am lying. The extension also ships with a version compiled for Ubuntu on WSL (the library `libyumd.so` and executable `yumd`). This is for advanced users only and it is highly recommended to ignore this.] and
 1. a VSCode extension (`yumd.vsix`).
 
 Both can be obtained freely [here](https://github.com/fiercedeity-productions/yumd-public), although source code is not public for now.
-
-Note.
-: For now, YuMD will stay closed-source, but this decision is open for review in future.
-
-Note.
-: There is no current plan to compile native binaries for Apple silicon. Macs running on Apple silicon should nonetheless be able to run the binaries through the Rosetta 2 compatability layer.
 
 The VSCode extension uses both the library and the executable to provide:
 1. real-time scroll-syncing preview with source mapping,
@@ -70,22 +145,26 @@ The VSCode extension uses both the library and the executable to provide:
 1. folding ranges, and
 1. commands to generate `.tex` and `.pdf` output, and to send notes to Anki.
 
-# Sending Notes to Anki
-This section details the proceedure for sending cards to Anki and syncing between YuMD notes and Anki.
+Note.
+: For now, YuMD will stay closed-source, but this decision is open for review in future.
 
-## Setup
+Note.
+: There is no current plan to compile native binaries for Apple silicon. Macs running on Apple silicon should nonetheless be able to run the binaries through the Rosetta 2 compatability layer.
+
+# Syncing Notes to Anki #sending-to-anki
+This section details the procedure for sending cards to Anki and syncing between YuMD notes and Anki.
+
+## Preliminary Knowledge and Preparation
 For a rundown on the syntax for defining flashcards, see [#defining-anki-flashcards].
 
 To allow YuMD to communicate with Anki, the `AnkiConnect` addon is required, which can be obtained [here](https://ankiweb.net/shared/info/2055492159). Please leave the port `localhost:8765` reserved for `AnkiConnect`.
 
 ## Sending Notes
-Before sending notes to Anki, ensure that Anki is open and the `AnkiConnect` addon is installed. It is also recommended not to have the Browse window open in Anki, since viewing flashcards while changes are being made can cause glitches within Anki.
+Before sending notes to Anki, ***ensure that Anki is open and the `AnkiConnect` addon is installed***. It is also recommended not to have the `Browse` window open in Anki, since viewing flashcards while changes are being made can cause glitches within Anki.
 
-To send your flashcards to Anki, use the command `YuMD: Send Notes to Anki`, which can be found in the toolbar menu, shown in [#toolbar-menu].
+To send your flashcards to Anki, use the command `YuMD: Send Notes to Anki`, which can be found in the toolbar menu, shown in [#toolbar-menu], or typing `Shift+Ctrl+P` (Windows) or `Shift+Command+P` and typing "YuMD: Send Notes to Anki". It might be helpful to assign a keybinding to this.
+
 ![Sending notes to Anki through VSCode.](2021-12-11-15-31-39.png) #toolbar-menu
-
-Note.
-: You may be confronted with the error message `Open a YuMD file to send to Anki`. This is a drawback of VSCode in that it is difficult to determine visible text editors. Be sure to *first select the text editor corresponding to the desired YuMD file before using the command*.
 
 Alternatively, notes can be sent to Anki via the command line using:
 ```
@@ -94,6 +173,9 @@ Alternatively, notes can be sent to Anki via the command line using:
 
 Note. #integrated-terminal-caution
 : The `YuMD: Send Notes to Anki` command works by sending this command to the integrated terminal. It is critical that there isn't already text on the current line of the terminal since this will prevent the command from working correctly.
+
+Note.
+: You may at times be confronted with the error message `Open a YuMD file to send to Anki`. This is because the corresponding `.yumd` file was not in focus when sending the command. This is a drawback of VSCode's API: it is difficult to determine visible text editors. Be sure to *first select the text editor corresponding to the desired YuMD file before using the command*.
 
 ## Note IDs
 After sending your notes to Anki for the first time, YuMD will tag flashcards with a note ID within your YuMD file. This allows YuMD to keep track of created flashcards.
@@ -107,14 +189,15 @@ Note.
 To change the content of a flashcard, simply make the change within your YuMD document and rerun `YuMD: Send Notes to Anki`. Using the note ID, YuMD will update the corresponding flashcard in Anki rather than creating a new one.
 
 Note.
-: Never make changes to flashcards within Anki itself. All your changes will be overwritten by the contents of the YuMD file the next time you run `YuMD: Send Notes to Anki`.
+: Never make changes to flashcards within Anki itself. Direct changes within Anki will be overwritten the next time you run `YuMD: Send Notes to Anki`.
 
 ### Deleting flashcards
-To delete a flashcard, append the string `delete` *after* the note ID, as shown in [#deleting-flashcard], and rerun `YuMD: Send Notes to Anki`. Upon deletion, YuMD will replace the note ID with the tag "ignore", as in [#ignored-flashcard], which prevents it from recreating the flashcard the next time you run `YuMD: Send Notes to Anki`. 
+To delete a flashcard, append the string `delete` *after* the note ID, as shown in [#deleting-flashcard], and rerun `YuMD: Send Notes to Anki`. Upon deletion, YuMD will replace the note ID with the tag `ignore`, as in [#ignored-flashcard], which prevents it from recreating the flashcard the next time you run `YuMD: Send Notes to Anki`. 
 
-![Append "delete" after the note ID to mark it for deletion.](2021-12-11-15-55-56.png) #deleting-flashcard
-
-![After deletion, YuMD automatically replaces the tag with "ignore" to avoid recreation of the flashcard upon next run.](2021-12-11-15-56-20.png) #ignored-flashcard
++ + Append "delete" after the note ID to mark it for deletion.
+  + ![ ](2021-12-11-15-55-56.png) #deleting-flashcard
++ + After deletion, YuMD automatically replaces the tag with "ignore" to avoid recreation of the flashcard upon next run.
+  + ![ ](2021-12-11-15-56-20.png) #ignored-flashcard
 
 Note.
 : Avoid deleting notes directly within Anki without manually changing the flashcard tag to "ignore".
@@ -132,7 +215,7 @@ This preview leverages YuMD's HTML output and updates as you type.
 Critically, source mapping means that the preview is aware of exactly which line of code each element came from. This allows for scroll syncing between the `.yumd` text editor and the preview webview.
 
 Tip.
-: `Ctrl`- or `Command`-clicking an element in the preview jumps to the corresponding line of code in the corresponding `.yumd` file.
+: `Ctrl`- or `Command`-clicking an element in the preview jumps to the corresponding line of code in the corresponding `.yumd` file. This can prove hugely useful for quickly navigating through your notes.
 
 ### Locked Preview
 Locked mode can be activated using the command `YuMD: (Un)lock YuMD Preview`, or toggling the lock button next to the preview button.
@@ -144,38 +227,58 @@ In locked mode, the preview reads only what is saved to disk. This means that th
 Tip.
 : For large documents with lots of math, or for slow computers, YuMD preview will begin lagging behind due to the slow MathJaX render. It is recommended to enable locked mode to produce previews on save, which will substantially reduce the lag.
 
-## VSCode Extension Preferences
-The VSCode extension provides a small range of preferences, mostly related to the preview.
+Note.
+: The YuMD preview is far from an exact representation of the final LaTeX output. Things like section and equation numbering are non-existent within the HTML output. Other things like table of contents can only be enabled within LaTeX output (see [#tbl:configuration-options]). The preview is intended to function as a preview offering assurance that YuMD is interpreting your notes correctly and as a quick way of navigating through your notes.
+
+Example (single and doublequotes).
+: One difference between the two types of output is how they handle single and double quotes.
+
+  Rendered LaTeX ignores whether you have used single or doublequotes. By default, outer quotations will be typeset using single quotation symbols, even if they are written using doublequotes, and inner quotation marks will produce double quotation symbols. This can be switched by setting `language` to `american` (see [#configuration-options] and [#tbl:configuration-options]), with the side effect of changing hyphenations and everything `babel`-related.
+
+  In HTML on the other hand, single and doublequotes are respected.
+
+  + + `"this is surrounded by 'single' quotes"`
+    + "this is surrounded by 'single' quotes"
+
+## VSCode Extension Settings
+The YuMD VSCode extension provides a small range of settings, mostly related to the preview.
 
 **It is highly recommended to change the default font**, by searching for `YuMD: preview font family`. The font `"Stix Two Text"`, which can be downloaded [here](https://www.stixfonts.org/) is highly recommended.
 
-A custom CSS stylesheet is also supported. For purposes of brevity, a documentation of styling is not included here. Instead, we would recommend running
+A custom CSS stylesheet is also supported if you are (undoubtedly) unhappy with the default styling offered. For purposes of brevity, a documentation of styling is not included here. Instead, we would recommend running
 ```
 /path/to/yumd/executable path/to/document.yumd --html path/to/output.html
 ```
 and inspecting `path/to/output.html` to investigate how to style the rendered elements.
 
-# Compiling LaTeX
-When compiling `.yumd` files into LaTeX, YuMD copies dependencies (images and bibliographies) into the target directory, preserving the directory structure.
+Note.
+: Unfortunately, you must close and reopen the preview whenever you change a preview-related setting for it to take effect.
 
-To compile YuMD into LaTeX, the VSCode extension provides the command `YuMD: Compile LaTeX`. Using this, you are free to post-process the outputted `.tex` files however you want. Alternatively, the command line can be used:
+# Compiling LaTeX
+To compile YuMD notes into LaTeX, the VSCode extension provides the command `YuMD: Compile LaTeX`. Using this, you are free to post-process the outputted `.tex` files however you want. Alternatively, the command line can be used:
 ```
 /path/to/yumd/executable path/to/document.yumd --latex path/to/desired/output/directory
 ```
 
-If you do not plan to do your own post-processing, and simply want a `.pdf` file, you an use the command `YuMD: Compile LaTeX and Create PDF`, which compiles YuMD into LaTeX and then runs `pdflatex` -> `biber` -> `pdflatex` to generate the pdf file automatically.
+If you do not plan to do your own post-processing, and simply want a PDF file, you an use the command `YuMD: Compile LaTeX and Create PDF`, which compiles YuMD into LaTeX and then runs `pdflatex` -> `biber` -> `pdflatex` to generate the PDF file.
+
+Note.
+: When compiling into LaTeX, YuMD copies dependencies (images and bibliographies) into the target directory, preserving the directory structure.
 
 Note.
 : See [#integrated-terminal-caution].
 
-# Syntax
+# Syntax #yumd-syntax
 ### CommonMark Conformity
 YuMD largely conforms to the [CommonMark specification](https://spec.commonmark.org/0.29/), save for a few edge cases. In particular:
 1. unicode and html character references are not implemented,
-1. tabs are always interpreted as `4` spaces, contradicting the CommonMark specification that tabs are translated into the equivalent number of spaces up to the next multiple of `4`. For this reason, **all indentation in YuMD should be done using spaces to avoid unexpected results**.
+1. tabs are always interpreted as `4` spaces, contradicting the CommonMark specification that tabs are translated into the equivalent number of spaces up to the next multiple of `4`. [#indentation] cannot be stressed enough: **all indentation in YuMD should be done using spaces to avoid unexpected results**.
 
-# Extended Syntax
-CommonMark by itself is largely enough for writing prose, but since we are not English students, CommonMark alone can be quite limiting. This section details the additional components introduced by YuMD which make it amicable for actual notetaking and even report writing.
+   Proposition.
+   : This behaviour will be reviewed in a future update, since rounding to the next multiple of four can be implemented trivially.
+
+# Extended Syntax #ext-syntax
+This section details the additional components introduced by YuMD which make it amicable for rich notetaking and even report writing.
 
 ## Theorems
 YuMD makes it easy to create theorems, definitions, proofs, corollaries, etc., in the style of mathematical textbooks. Blasphemous as it is, all of these environments are referred internally as theorems.
@@ -201,7 +304,7 @@ Note.
 : To correctly set out a theorem,
   1. the period `.` after the closing bracket or theorem identifier (if no theorem name) is critical,
   1. the colon `:` must be on a newline and at the same indentation level as the theorem identifier, and
-  1. blank lines can exist between block elements belonging to the theorem, but must be at the same indentation as the first block element after the colon.
+  1. blank lines can exist between block elements belonging to the theorem, but must be aligned with the first block element after the colon.
   1. unless it is the first line of the file, there must be a blank line before the theorem syntax to separate it from the previous paragraph.
 
 `<theorem identifier>` is case-insensitive and can be any of
@@ -218,77 +321,98 @@ Note.
 1. `note` or `not`,
 1. `problem` or `prb`,
 1. `proof` or `prf`,
+1. `proposition` or `prp`,
 1. `question` or `que`,
 1. `remark` or `rmk`,
+1. `solution` or `sln`,
 1. `theorem` or `thm`, and
 1. `tip`.
 
-`<theorem name>` is optional and is typeset in brackets beside the theorem type. This is useful for naming theorems and specifying terms to define, allowing for quick flashcard creation. The exception here is with the proof environment, where by convention, entire "*Proof*" text is replaced with the text given in brackets. This is handy in defining your own "theorem" environments.[^a footnote which should work]
+`<theorem name>` is optional and is typeset in brackets beside the theorem type. This is useful for naming theorems and specifying terms to define, allowing for quick flashcard creation. The exception here is with the proof environment, where by convention, entire "*Proof*" text is replaced with the text given in brackets. This is handy in defining your own "proof" environments.
 
 + + ```
     Theorem (Fermat's little).
-    : If \(p\) is a prime number,
-      then for every integer \(a\),
+    : If \(p\) is a prime
+      number, then for every
+      integer \(a\),
 
       \[
           a^p \equiv a \mod p.
       \]
 
     Prf.
-    : Left as an exercise to the reader.
+    : Left as an exercise to
+      the reader.
     ```
-  + Theorem (Fermat's little). ##1639168715379
-    : If \(p\) is a prime number, then for every integer \(a\),
+  + Theorem (Fermat's little).
+    : If \(p\) is a prime
+      number, then for every
+      integer \(a\),
 
       \[
           a^p \equiv a \mod p.
       \]
 
     Prf.
-    : Left as an exercise to the reader.
+    : Left as an exercise to
+      the reader.
 
 + + ```
     Definition (economics).
-    : There does not exist one.
+    : (There is none.)
 
-    Proof (PProof of no single definition).
-    : Ask  Cambridge professors
+    Proof (Why no definition).
+    : Ask Cambridge professors
       and you will either:
       1. receive an
-         unsatisfactory answer, or
+         unsatisfactory
+         answer, or
       1. receive no answer.
     ```
-  + Definition (economics). ##1639168715448
-    : There does not exist one.
+  + Definition (economics).
+    : (There is none.)
 
-    Proof (Proof of no single definition). ##1639168715520
-    : Ask  Cambridge professors and you will either:
-      1. receive an unsatisfactory answer,
-      1. receive no answer
+    Proof (Why no definition).
+    : Ask Cambridge professors
+      and you will either:
+      1. receive an
+         unsatisfactory
+         answer, or
+      1. receive no answer.
 
 
 
-Since theorems are implemented internally as a special case of definition lists, it is possible to have multiple entries. This simply creates a new paragraph and has no special effect.
+Since theorems are implemented internally as a special case of [definition lists](#definition-lists), it is possible to have multiple entries. This simply creates a new paragraph and has no special effect.
 
 + + ```
     Remark.
-    : You can indeed define multiple entries,
-    : but this has no effect and you are better off
+    : You can indeed define
+      multiple entries,
+    : but this has no effect,
+      and you are better off
 
-      simply using a newline to define your paragraph.
+      simply using a newline
+      to make paragraphs,
 
-    : No penalties for using extra colons though.
+    : although there are no
+      penalties for using
+      colon notation.
     ```
   + Remark.
-    : You can indeed define multiple entries,
-    : but this has no effect and you are better off
+    : You can indeed define
+      multiple entries,
+    : but this has no effect,
+      and you are better off
 
-      simply using a newline to define your paragraph.
+      simply using a newline
+      to make paragraphs,
 
-    : There are no penalties for using extra colons though.
+    : although there are no
+      penalties for using
+      colon notation.
 
-## Definition Lists
-Although it is recommended to use the definition theorem to indicate terms and definitions, YuMD implements definition lists, the syntax for which is:
+## Definition Lists #definition-lists
+Although the recommended `definition` theorem is available, you may prefer to use definition lists, the syntax for which is:
 
 ```
 <term>
@@ -297,70 +421,54 @@ Although it is recommended to use the definition theorem to indicate terms and d
 <term>
 : <definition>
 
-<term>
-<term>
-: <definition>
-
-<term>
-: <definition>
-: <definition>
-
-<term>
-<term>
-<term>
-: <definition>
-: <definition>
+<term 1>
+<term 2>
+<term 3>
+: <definition A>
+: <definition B>
 ```
 Critically,
-1. a colon is required on a newline to mark each new definition
-1. definitions can contain block content, but each newline must be indented to the same level as the first
-1. multiple terms can be assigned to the same definition, multiple definitions can be assigned to the same term, and multiple terms can be assigned to multiple definitions, although the use case for this is probably very limited.
+1. a colon is required on a newline to mark each new definition,
+1. each term-definition group must be separated by a blank line as above, and
+1. definitions can contain block content, but each newline must be indented to align with the first.
+
+Multiple terms can be assigned to the same definition, multiple definitions can be assigned to the same term, and multiple terms can be assigned to multiple definitions, although the use case for this is probably very limited.
 
 + + ```
     Term
-    : Your definition goes here,
-      and can contain block content,
-      such as
-      > blockquotes,
-      but must be indented correctly.
+    : Definition goes
+      here, with
 
-    New Term
-    : A new term/definition group
-      must be separated by a newline.
+      > blockquotes.
 
     Multiple
     Terms
     Here
     : are assigned
     : to multiple
-    : definitions here. But this
-      is probabily a useless feature,
-      implemented only for
-      completeness.
+    : definitions here.
     ```
   + Term
-    : Your definition goes here, and can contain block content, such as
-      > blockquotes,
-      but must be indented correctly.
+    : Definition goes
+      here, with
 
-    New Term
-    : A new term/definition group must be separated by a newline.
+      > blockquotes.
 
     Multiple
     Terms
     Here
     : are assigned
     : to multiple
-    : definitions here. But this is probabily a useless feature
-      implemented only for completeness.
+    : definitions here.
 
 ## Tables
-The area where YuMD deviates from other markdown implementations the most is with regard to tables. The most popular method, as implemented by GitHub markdown, uses ugly gutter characters to mark out tables, limiting yourself to plaintext in each cell. Instead, tables are defined in YuMD using two-dimentional lists. This gives the advantage of both
+The area where YuMD deviates the most from other markdown implementations is with regard to tables. The [most popular method](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables), as implemented by GitHub Flavoured Markdown, uses ugly gutter characters to mark out tables, limiting yourself to plaintext in each cell. Instead, tables are defined in YuMD using two-dimentional lists. This gives the advantage of both
 1. readability, and critically
 1. the flexibility to place block elements (blockquotes, lists, theorems, etc.) within tables, rather than just plaintext.
 
-The basic syntax for a table is by nesting unordered lists using `+`s. For a valid table, you must use only `+`s. Block elements can be used within cells if indented correctly.
+The basic syntax for a table is by nesting unordered lists using `+` or `-`. For a valid table, you must use only `+` or only `-`. Block elements can be used within cells if indented correctly.
 
+### Tables Defined Row-by-Row
 Tables using `+` are defined row-by-row.
 
 + + ```
@@ -369,8 +477,10 @@ Tables using `+` are defined row-by-row.
 
     + + Mathematics:
 
-        \[F(x) \equiv
-        \int_0^x f(t) \dd{t}\]
+        \[
+          F(x) \equiv
+          \int_0^x f(t) \dd{t}
+        \]
 
       + Blockquotes:
 
@@ -382,45 +492,54 @@ Tables using `+` are defined row-by-row.
 
     + + Mathematics:
 
-        \[F(x) \equiv \int_0^x f(t) \dd{t}\]
+        \[
+          F(x) \equiv
+          \int_0^x f(t) \dd{t}
+        \]
 
       + Blockquotes:
 
-        > Insert inspirational quotation here.
+        > Insert inspirational
+          quotation here.
 
 ### Captions
 A final row with a single cell can be used to define a caption for a table. Critically, this cannot contain block content, only inline elements (math, emphasis, etc.).
 
 + + ```
-    + + Person A
+    + + Person \(A\)
       + **Econ**
       + *Pembroke*
 
-    + + Person B
+    + + Person \(B\)
       + **Eng**
       + *Trinity*
 
-    + + Person C
+    + + Person \(C\)
       + **Compsci**
       + *Girton*
 
     + + Subject choices for
-        person \(i \in
-        \qty{A, B, C}\).
+        person \(i \in \qty{A,
+        B, C}\).
     ```
   + + + Person \(A\)
       + **Econ**
       + *Pembroke*
+
     + + Person \(B\)
       + **Eng**
       + *Trinity*
+
     + + Person \(C\)
       + **Compsci**
       + *Girton*
-    + + Subject choices for person \(i \in \qty{A, B, C}\).
+
+    + + Subject choices for
+        person \(i \in \qty{A,
+        B, C}\).
 
 Note.
-: The newline between each table entry is entirely optional. The following examples omit use of newlines.
+: The blank line between each table entry is entirely optional. The following examples omit use of newlines.
 
 ### Headings
 If all cells of the first row contain only emphasis items (italic or strong), then the first row is interpreted as a heading row and formatted centered and bold.
@@ -441,7 +560,7 @@ If all cells of the first row contain only emphasis items (italic or strong), th
       + 20
 
 ### Alignment Row
-Cell alignments can be defined if the very first row contains cells with text `l|c|r|j`. This will align the rest of each column accordingly. By default, left alignment is used if no alignment row is given.
+Cell alignments can be defined if the very first row contains cells with text `l` or `c` or `r` or `j` depending on whether you want left-aligned, right-aligned, centered or justified columns respectively. This will align the rest of each column accordingly. By default, left alignment is used if no alignment row is given.
 
 
 + + ```
@@ -491,15 +610,15 @@ If a heading row is desired, it must immediately *follow* the alignment row. Hea
       + *13.7 trillion*
 
 ### Transposed Tables
-In many a case, it is more convenient to define tables column-by-column rather than row-by-row. For this, `-` is used instead of `+`.
+In many a case, it is more convenient to define tables column-by-column rather than row-by-row. For this, `-` is used instead of `+`. However, although the table body is transposed, heading and alignment rows remain interpreted by row. See [#transposed-table] for examples.
 
 + + ```
     - - Oil
       - Soy sauce
       - Hoisin sauce
-      - Ramen
-    - - $3
-      - $1
+      - Beer
+    - - £1
+      - £3
       - $2
       - $2
     ```
@@ -507,13 +626,11 @@ In many a case, it is more convenient to define tables column-by-column rather t
   + - - Oil
       - Soy sauce
       - Hoisin sauce
-      - Ramen
-    - - $3
-      - $1
+      - Beer
+    - - £1
+      - £3
       - $2
       - $2
-
-However, although the table body is transposed, heading and alignment rows remain interpreted by row.
 
 + + ```
     - - l
@@ -553,48 +670,47 @@ However, although the table body is transposed, heading and alignment rows remai
       - Trinity
 
     - - Subjects and colleges.
++ + Tables defined column-by-column. #transposed-table
 
 ## Footnotes
 ### Inline Footnotes
 Footnotes can be defined inline by using the syntax `[^<footnote text>]`. This is possibly the most concise and useful way of defining footnotes, but has the limitation that only inline formatting (emphasis, links, etc.) can be included within the footnote. No block elements can be included if defined this way.
-
-+ + ```I enjoy economics.[^I really *do not*.]```
-  + I enjoy economics.[^I really *do not*.]
 
 ### Footnote References
 Rather than writing out the footnote within the text, you can define the footnote elsewhere and refer its label within the text. Footnotes are defined using the following syntax:
 
 ```
 [^<footnote-label>]:
-    <block content>
-    <block content>
+   <block content>
+   <block content>
 
-    <block content>
+   <block content>
 ```
 
 Critically,
 1. `<footnote-label>` must not contain spaces, and
-1. block content must be indented by at least four spaces.
+1. the content of the footnote must be indented by at least `3` spaces.
 
-Footnotes are then referred to using the syntax `[^footnote-label]`. Note that this creates potential conflict with inline footnotes as the syntax is almost identical: if `<footnote-label>` is not defined or has spaces, then it will be interpreted as an inline footnote.
+Footnotes are then referred to using the syntax `[^<footnote-label>]`. Note that the syntax for an inline footnote is identical to the syntax for a footnote reference. If `<footnote-label>` is not defined or has spaces, then it will be interpreted as an inline footnote.
 
 Note.
 : The ordering of footnote definition and reference does not matter. Footnotes can be referred to before they are defined, as in the example below.
 
 + + ```
-    See footnote.[^complex-footnote]
+    See footnote.[^my-ftnote]
 
-    [^complex-footnote]:
-        This is a very complicated
+    [^my-ftnote]:
+        This is a very complex
         footnote, involving
 
         1. > blockquotes
         1. and lists
     ```
-  + See footnote.[^complex-footnote]
+  + See footnote.[^my-ftnote]
 
-    [^complex-footnote]:
-        This is a very complicated footnote, involving
+    [^my-ftnote]:
+        This is a very complex
+        footnote, involving
 
         1. > blockquotes
         1. and lists
@@ -602,63 +718,124 @@ Note.
 
 
 ## References
-YuMD allows you to refer to parts of the document in a similar manner to LaTeX. All blocks can be referenced and linked to in HTML, but only section headings, figures, tables and theorems in LaTeX.
+YuMD allows you to refer to parts of the document in a similar manner to LaTeX. All blocks can be referenced and linked to in HTML, but only section headings, figures, tables and specific theorems in LaTeX.
 
-To label an element, use the syntax `#<label name>` at the appropriate position as shown in the example below. See [#referencing-equations] for how to label equations.
+To label an element, use the syntax `#<label-name>` at the appropriate position as shown in [#referencing-examples]. See [#referencing-equations] for how to label equations.
+
+Critically, `<label-name>` cannot contain spaces.
 
 To refer back to the element, you can either use syntax
-1. `[link text](#<label name>)` similarly to how you would use a link, or
-1. simply `[#<label name>]` to allow LaTeX to automatically create link text by cleverly inferring the type of element. Note that the HTML output will simply be a link titled `#<label name>`, without clever inference.
+1. `[<link text>](#<label-name>)` similarly to how you would use a link, or simply
+1. `[#<label-name>]` to allow LaTeX to automatically create link text by cleverly inferring the type of element. Note that the HTML output will simply be a link titled `#<label name>`, without clever inference.
 
 References can appear before the label.
 
 References to undefined elements will issue a warning.
 
+Note.
+: Only specific theorems can be linked to in LaTeX. Specifically, unnumbered theorems cannot be linked to. These are:
+  1. `assumption`,
+  1. `proof`,
+  1. `remark`,
+  1. `solution`, and
+  1. `tip`.
+
+[#referencing-examples] shows how to refer to labelled elements, and where to place labels for sections, theorems, tables and figures.
+
+Note.
+: In order to label a figure, you **must have a blank line before the figure** (demonstrated in [#referencing-examples]). Otherwise, there is ambiguity with regard to labelling the figure or labelling the paragraph before it.
+
+Note.
+: If you would like to typeset a paragraph with the text `#<hashtag>`, you must escape the `#`. **Not escaping will produce an empty paragraph**, since the hashtag is interpreted as a label.
+
+  + + `\#borisout!!!`
+    + \#borisout!!!
+
 + + ```
-    Please see [#section-heading] for
-    important facts and figures.
+    See [#my-section] for art.
 
-    # Section Heading #section-heading
+    # A Section #my-section
 
-    Theorem. #a-theorem
+    Theorem. #big-thm
     : An important theorem.
 
     - - Micro
       - Macro
-      - Maths
     - - Block
       - Tambakis
-      - Robertson
-    - - An important table. #important-table
+    - - Hi. #big-tbl
 
-    ![True art.](./figures/pem.png) #wonder
+    ![Art.](./pem.png) #art
 
-    In particular,
-    [this important theorem](#a-theorem) 
-    is worth remembering. We would
-    also recommend a reading of
-    [#important-table], and
-    a detailed study of
-    [this work of art](#wonder).
+    [The theorem](#big-thm) 
+    is important. We also
+    looking at [#big-tbl] and
+    [this art](#art).
     ```
-  + Please see [#section-heading] for important facts and figures. 
-  
-    ## Section Heading #section-heading
-    Theorem. #a-theorem
+  + See [#my-section] for art.
+
+    # A Section #my-section
+
+    Theorem. #big-thm
     : An important theorem.
 
     - - Micro
       - Macro
-      - Maths
     - - Block
       - Tambakis
-      - Robertson
-    - - An important table. #important-table
+    - - Hi. #big-tbl
 
-    ![A true work of art.](./figures/pem.png) #wonder
+    ![Art.](./pem.png) #art
 
-    In particular, [this important theorem](#a-theorem) is worth remembering. We would also recommend a reading of [#important-table], and a detailed study of [this work of art](#wonder). 
+    [The theorem](#big-thm) 
+    is important. We also
+    looking at [#big-tbl] and
+    [this art](#art).
++ + ```
+    To label a figure without
+    a caption, use a space as
+    a "caption".
 
+    ![ ](pem.png) #true-art
+
+    See [#true-art] for wow.
+    ```
+  + To label a figure without
+    a caption, use a space as
+    a "caption".
+
+    ![ ](pem.png) #true-art
+    
+    See [#true-art] for wow.
++ + ```
+    To label a table without a
+    caption, place it where
+    the caption would go.
+    
+    [#ptr] shows possible
+    ways of declaring a
+    pointer.
+
+    - - `int *a; int* b;`
+      - `int * c;`
+    - - Understandable
+      - Whyyyyyyyyyyyyyyyyyyyy
+    - - #ptr
+    ```
+  + To label a table without a
+    caption, place it where
+    the caption would go.
+    
+    [#ptr] shows possible
+    ways of declaring a
+    pointer.
+
+    - - `int *a; int* b;`
+      - `int * c;`
+    - - Understandable
+      - Whyyyyyyyyyyyyyyyyyyyy
+    - - #ptr
++ + Referencing across the document. #referencing-examples
 
 ## Citations
 YuMD allows you to include BibTeX `.bib` bibliography files and use citations either in "in-text" style by default, or in "footnote" style. Bibliographies are included by specifying a path to the bibliography in the YAML header or corresponding `.yucfg` file (see YuMD file configuration), and optionally specifying the citation style:
@@ -687,10 +864,10 @@ Note.
 Note.
 : If no `<text before>` is desired but `<text after>` is, place a space between the two colons to avoid YuMD mistaking the line as the beginning of a flashcard.
 
-+ + `[@sargent2009ends] posits that persistent fiscal deficits are the driver behind persistently high levels of inflation.`
-  + [@sargent2009ends] posits that persistent fiscal deficits are the driver behind persistently high levels of inflation.
-+ + `[@de2010girl: :p. 18] argue this could have possibly led to higher rates of fertility during marriage, through a greater propensity to procreate.`
-  + [@de2010girl: :p. 18] argue this could have possibly led to higher rates of fertility during marriage, through a greater propensity to procreate.
+  + + `[@sargent2009ends] posits that persistent fiscal deficits are the driver behind persistently high levels of inflation.`
+    + [@sargent2009ends] posits that persistent fiscal deficits are the driver behind persistently high levels of inflation.
+  + + `[@de2010girl: :p. 18] argue this could have possibly led to higher rates of fertility during marriage, through a greater propensity to procreate.`
+    + [@de2010girl: :p. 18] argue this could have possibly led to higher rates of fertility during marriage, through a greater propensity to procreate.
 
 Note.
 : YuMD does not allow you to mix citation styles within the same document. You must either use in-text or footnote for all citations.
@@ -762,45 +939,46 @@ Note.
 Note.
 : LaTeX and HTML outputs treat included files differently. When outputting LaTeX, YuMD will create a `.tex` file for all `.yumd` documents, and preserve the given directory structure. When outputting HTML, YuMD generates a single large `.html` file.
 
-+ + Assuming the following file structure:
++ + **Assuming the following file structure:**
     ```
     report.yumd
     sections/
-        introduction.yumd
-        conclusion.yumd
-    quotations/
+        intro.yumd
+        cclsn.yumd
+    qts/
         friedman.yumd
     ```
     
-    In `report.yumd` (the root file):
+    **In `report.yumd` (the root file):**
     ```
-    # Introduction
-    [[sections/introduction.yumd]]
-    # Conclusion
-    [[sections/conclusion.yumd]]
+    ## Introduction
+    [[sections/intro.yumd]]
+    ## Conclusion
+    [[sections/cclsn.yumd]]
     ```
 
-    In `sections/introduction.yumd`:
+    **In `sections/intro.yumd`:**
     ```
-    Introduction content goes here,
-    with quotation from Friedman:
-    > [[../quotations/friedman.yumd]]
+    Introduction content goes
+    here, with quotation from
+    Friedman:
+    > [[../qts/friedman.yumd]]
     ```
   
-    In `sections/conclusion.yumd`:
+    **In `sections/cclsn.yumd`:**
     ```
     Conclusion goes here.
     ```
 
-    In `quotations/friedman.yumd`:
+    **In `qts/friedman.yumd`:**
     ```
     A society that puts equality
     before freedom will get neither.
     ```
   + ## Introduction
-    [[sections/introduction.yumd]]
+    [[sections/intro.yumd]]
     ## Conclusion
-    [[sections/conclusion.yumd]]
+    [[sections/cclsn.yumd]]
 
 ## LaTeX Math #latex-math-mode
 YuMD supports math-mode LaTeX. Inline math can be typeset by surrounding it either with dollar signs `$` or with escaped brackets `\(` and `\)`. Display math can be typeset with either double dollar signs `$$` or with escaped square brackets `\[` and `\]`. By convention Brackets are preferred to dollar signs.
@@ -815,7 +993,7 @@ Example.
     by:
     \[
       \mathrm{Var}(\hat \beta)_{ij} &=
-            \mathrm{Cov}(\hat \beta_i, \hat \beta_j) \\
+                              \mathrm{Cov}(\hat \beta_i, \hat \beta_j) \\
       &\equiv \mathrm{E}\qty[(\hat \beta_i - \mathrm{E}(\hat \beta_i))
                              (\hat \beta_j - \mathrm{E}(\hat \beta_j))].
     \]
@@ -829,7 +1007,7 @@ Example.
     by:
     \[
       \mathrm{Var}(\hat \beta)_{ij} &=
-            \mathrm{Cov}(\hat \beta_i, \hat \beta_j) \\
+                              \mathrm{Cov}(\hat \beta_i, \hat \beta_j) \\
       &\equiv \mathrm{E}\qty[(\hat \beta_i - \mathrm{E}(\hat \beta_i))
                              (\hat \beta_j - \mathrm{E}(\hat \beta_j))].
     \]
@@ -843,7 +1021,7 @@ Note.
 : LaTeX disallows using the & alignment character in alignment environments within a table. There is a workaround for this, but this is not implemented by YuMD. If necessary, this workaround can be considered in a future update.
 
 Note.
-: YuMD automatically loads in the [`physics` package](https://mirror.ox.ac.uk/sites/ctan.org/macros/latex/contrib/physics/physics.pdf), an extremely useful package that allows you to quickly typeset derivatives, vectors, auto-sizing brackets, and common matrix types. Although this works automatically in LaTeX output and for the HTML preview output in VSCode, Anki (which uses MathJax to render LaTeX math) does not use `physics` by default. [#loading-physics-in-anki] details how to enable the `physics` package in Anki on desktop. The `physics` package is by no means necessary and many people choose not to use it (either by ignorance or purposeful avoidance), so this is completely optional.
+: YuMD automatically loads in the [`physics` package](https://mirror.ox.ac.uk/sites/ctan.org/macros/latex/contrib/physics/physics.pdf), an extremely useful package that allows you to quickly typeset derivatives, vectors, auto-sizing brackets, and common matrix types. Although this works automatically in LaTeX output and for the HTML preview output in VSCode, Anki (which uses MathJax to render LaTeX math) does not load the `physics` package by default. [#loading-physics-in-anki] details how to enable the `physics` package in Anki on desktop. The `physics` package is by no means necessary and many people choose not to use it (either by ignorance or purposeful avoidance), so this is completely optional.
 
 ### Referencing Equations #referencing-equations
 YuMD supports the standard LaTeX `\label{<equation-label>}` syntax, allowing you to refer to equations across the document.
@@ -856,16 +1034,22 @@ YuMD supports the standard LaTeX `\label{<equation-label>}` syntax, allowing you
          \label{pc-util}
     \]
 
-    Utility is maximised where
-    \(ax\) and \(by\)
+    Expenditure is minimised
+	to achieve a given utility
+    if \(ax\) and \(by\)
     in [#pc-util] are equal.
     ```
   + We have:
     \[
-      U(x, y) = \min\qty{ax, by} \label{pc-util}
+      U(x, y)
+      = \min\qty{ax, by}
+         \label{pc-util}
     \]
 
-    Utility is maximised where \(ax\) and \(by\) in [#pc-util] are equal.
+    Expenditure is minimised
+	to achieve a given utility
+    if \(ax\) and \(by\)
+    in [#pc-util] are equal.
 
 ## Figures
 ### Images
@@ -925,7 +1109,7 @@ window.MathJax = {
 };
 ```
 
-# YuMD File Configuration
+# YuMD File Configuration #configuration
 YuMD supports file configuration using YAML in two ways: first, through a YAML header at the **beginning** of the file, and second, through a separate `<filename>.yucfg` file beside corresponding `<filename>.yumd` file. When both are used, the configurations are merged, with the YAML header taking precedence over the `.yucfg` file.
 
 ### YAML Header
@@ -942,7 +1126,7 @@ Alternatively, a configuration file with the same filename as the `.yumd` file c
 
 The `.yucfg` file does not need to begin with `---` and end with `...`, although it can.
 
-## Configuration Options
+## Configuration Options #configuration-options
 
 Below is a complete configuration file. All entries are optional.
 
@@ -978,6 +1162,7 @@ anki:
   deck: Default
   plain-note-type: Basic
   cloze-note-type: Cloze
+  theorem-note-type: Basic
   definition-note-type: Basic
 
 latex:
@@ -1067,6 +1252,8 @@ latex:
 
   - Specify whether to insert a page break after the table of contents.
 
+- - Configuration options. #tbl:configuration-options
+
 # Defining Anki Flashcards #defining-anki-flashcards
 A core function of YuMD is to allow seemless creation of flashcards from within your notes, syncing them to Anki. YuMD offers a prethora of ways to lay out flashcards, so it is well worth reading this entire section.
 
@@ -1106,7 +1293,7 @@ Note.
 : Flashcards can be sent to subdecks as you would expect. For example,
   ```
   Deck::Subdeck::Subsubdeck::Note Type
-	<content>
+    <content>
   ```
   is completely valid. Ensure that the subdeck exists before sending your flashcards.
 
