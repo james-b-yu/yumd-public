@@ -1,3 +1,4 @@
 tex/
 *.bak
 *.en-GB.txt
+.DS_Store

@@ -17,6 +17,7 @@ latex:
         keepspaces=true
     }
 ...
+
 # TL;DR
 YuMD is an extension of Markdown allowing for the typesetting of rich and complex notes, with first-class support for flashcard creation from directly within your notes. YuMD lets you
 1. create and directly sync flashcards between `.yumd` notes and Anki, avoiding the need to write out notes multiple times,
