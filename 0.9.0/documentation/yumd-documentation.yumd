@@ -1,7 +1,8 @@
 ---
-title: Documentation for YuMD
-subtitle: Created using YuMD
-date: 2021-12-14
+title: YuMD
+subtitle: A Unified System of Notetaking and Flashcard Creation
+date: 2021-12-15
+author: James Yu
 
 title-type: document
 cite-style: in-text
@@ -17,7 +18,7 @@ latex:
     }
 ...
 # TL;DR
-YuMD is an extension of markdown allowing for the typesetting of rich and complex notes, with first-class support for flashcard creation from directly within your notes. YuMD lets you
+YuMD is an extension of Markdown allowing for the typesetting of rich and complex notes, with first-class support for flashcard creation from directly within your notes. YuMD lets you
 1. create and directly sync flashcards between `.yumd` notes and Anki, avoiding the need to write out notes multiple times,
 1. export notes into LaTeX to create well-typeset PDFs, and
 1. (for advanced users) export notes into HTML files for further processing.
@@ -26,7 +27,7 @@ A full reading of this documentation is recommended if you want to leverage the 
 
 
 Note. #indentation
-: Like Python, YuMD relies critically on correct indentation to determine the structure of your notes. Make sure things are aligned correctly. Importantly, it is **strongly recommended use to spaces rather than tabs to indent**. YuMD treats all tab characters as `4` spaces, which can easily lead to misunderstanding between you and the parser. **It may help to enable `Indent Using Spaces`, specifically `2` spaces in VSCode** (don't worry: this setting will be specific to `.yumd` files and you won't need to constantly switch indentation settings whenever you work with other files).
+: Like Python, YuMD relies critically on correct indentation to determine the structure of your notes. Make sure things are aligned correctly. Importantly, it is **strongly recommended using spaces rather than tabs to indent**. YuMD treats all tab characters as `4` spaces, which can easily lead to misunderstanding between you and the parser. **It may help to enable `Indent Using Spaces`, specifically `2` spaces in VSCode** (don't worry: this setting will be specific to `.yumd` files and you won't need to constantly switch indentation settings whenever you work with other files).
 
 Example (the importance of correct indentation).
 : Correct indentation allows you to create complex and nested structures in your document. How much indentation is required is quite intuitive within YuMD. For example, to create multiple paragraphs within a list item, each paragraph must begin at the same level of indentation as the first paragraph. The following example combined with some experimenting by yourself should be enough for a solid understanding:
@@ -57,7 +58,7 @@ Example (the importance of correct indentation).
             Proposition.
           : This will not work
 
-            Propsition
+            Proposition
             : while this will.
     ```
   + 1. a list
@@ -86,17 +87,17 @@ Example (the importance of correct indentation).
             Proposition.
           : This will not work
 
-            Propsition
+            Proposition
             : while this will.
 
 Example.
 : This documentation is itself created purely using YuMD. A skim through the [`.yumd` source](https://github.com/fiercedeity-productions/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.yumd) can prove very helpful in quickly familiarising yourself with the versatility of YuMD despite its simplicity.[^unfortunately, copying and pasting code from this PDF won't preserve spacing, but feel free to use the `.yumd` source as a reference.]
 
 Tip.
-: If line wrapping is enabled in the text editor, levels of displayed indentation could become misleading. It is recommended to set the VSCode setting `Editor: Render Whitespaces` to `selection` to help identify the actual number of spaces in the file.
+: If line wrapping is enabled in the text editor, levels of displayed indentation could become misleading. It is recommended setting the VSCode setting `Editor: Render Whitespaces` to `selection` to help identify the actual number of spaces in the file.
 
 Note.
-: For those new to markdown, [this page](https://commonmark.org/help/) provides a quick reference to basic syntax. YuMD extends this to allow for much more complex note creation. This is detailed in [#ext-syntax].
+: For those new to Markdown, [this page](https://commonmark.org/help/) provides a quick reference to basic syntax. YuMD extends this to allow for much more complex note creation. This is detailed in [#ext-syntax].
 
 # Introduction
 ## Why?
@@ -112,28 +113,32 @@ Proof (Partial disproof).
 : While highly imperfect, and undoubtedly full of small bugs, YuMD attempts to solve this.
 
 Existing solutions only allow for up to two conditions in [#trilemma] at one time:
-1. [Notion's](https://www.notion.so/) intuitive UI satisfies conditions 1 and 3 and allows for quick notetaking with mildly good-looking formatting but offers no way of producing flashcards,
-1. [Remnote](https://www.remnote.com/) satisfies conditions 2 and 3 allows for fast notetaking with first-class support for flashcard creation, but has an ugly UI, ugly formatting, and offers no way of collating all notes in one document.
+1. Notion's intuitive UI satisfies conditions 1 and 3 and allows for quick notetaking with mildly good-looking formatting but offers no way of producing flashcards,
+1. Remnote satisfies conditions 2 and 3 allows for fast notetaking with first-class support for flashcard creation, but has an ugly UI, ugly formatting, and offers no way of collating all notes in one document.
+1. Obsidian has a half-baked extension to create flashcards, so satisfies conditions 1 and 2 to some extent, but this, along with any non-standard element necessitates extremely verbose syntax. Complex, nested structures of theorems, tables, etc. are out of the question.
 
-Some solutions are even worse and only satisfy one conditions:
-1. "vanilla" markdown ([CommonMark](https://commonmark.org/), [Github Flavoured Markdown](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), etc.) is hugely limited and has substandard or non-existent support for tables, theorems, and many other things necessary for rich notes, while
-1. using pure LaTeX creates good-looking documents and allows you to create highly complex documents, but is a pain to type, and complex formatting requires complex workarounds and hours of hair pulling (cough cough nested tables cough cough).
+Some solutions are even worse and only satisfy one condition:
+1. "vanilla" Markdown ([CommonMark](https://commonmark.org/), [Github Flavoured Markdown](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax), etc.) is hugely limited and has substandard or non-existent support for tables, theorems, and many other things necessary for rich notes, while
+1. using pure LaTeX creates good-looking, highly-complex documents, but is a pain to type, and some complex formatting requires complex workarounds and hours of hair pulling (cough cough nested tables cough cough).
 
 Until now, the most realistic solution has been to create multiple copies of notes: once in a notetaking program such as Notion or directly in LaTeX, and again by *rewriting all the notes* in Anki.
 
 YuMD aims to solve this by
-1. extending markdown to include theorems, tables, footnotes, citations, references, and other important features (see [#ext-syntax]), and
+1. extending Markdown to include theorems, tables, footnotes, citations, references, and other important features (see [#ext-syntax]), and
 1. offering functionality to:
    1. computationally generate LaTeX (and HTML) code, saving huge amounts of time typing, debugging, and searching Stack Overflow, and
    1. identify, send and sync flashcards to Anki from within your notes.
 
 In sum, YuMD allows for complex and rich note content, while providing first class support for flashcard creation. At the same time, YuMD's LaTeX output allows you to create a good-looking final document while skipping the hair-pulling involved in writing actual LaTeX. YuMD is thus also useful for those who do not need the flashcard feature: typesetting reports and supervision work is a breeze with YuMD.
 
+Note.
+: Everybody studies in a different way. YuMD was created with my own way of studying and revising in mind, which could be very different from your way of studying. Nevertheless, it the hope that YuMD can help as many people as possible. Particularly, YuMD may be of help for those who like to type up notes and utilise electronic flashcards.
+
 ## What?
 The term YuMD refers broadly to the notetaking system outlined above. Physically, it refers to the file type `.yumd` (although all text files are accepted by YuMD regardless of the extension), and its physical manifestation as a computer program.
 
 As a computer program, YuMD is a C++ library compiled for Windows (`yumd.dll`) and macOS (`libyumd_osx_intel.dylib`). YuMD ships with:
-1. an executable (`yumd.exe` and `yumd_osx_intel`), which provides a command-line interface to this library,[^I am lying. The extension also ships with a version compiled for Ubuntu on WSL (the library `libyumd.so` and executable `yumd`). It is highly recommended to ignore this.] and
+1. an executable (`yumd.exe` and `yumd_osx_intel`),[^I am lying. The extension also ships with a version compiled for Ubuntu on WSL (the library `libyumd.so` and executable `yumd`). It is highly recommended ignoring this.] which provides a command-line interface[^see [#appendix]] to this library, and
 1. a VSCode extension (`yumd.vsix`).
 
 The binaries and VSCode extension can be obtained freely [here](https://github.com/fiercedeity-productions/yumd-public), although source code is not public for now.
@@ -149,9 +154,9 @@ Note.
 : For now, YuMD will stay closed-source, but this decision is open for review in future.
 
 Note.
-: There is no current plan to compile native binaries for Apple Silicon. Macs with Apple Silicon should nonetheless be able to run the Intel binaries through the Rosetta 2 compatability layer.
+: There is no current plan to compile native binaries for Apple Silicon. Macs with Apple Silicon should nonetheless be able to run the Intel binaries through the Rosetta 2 compatibility layer.
 
-# Syncing Notes to Anki #sending-to-anki
+# Syncing Notes with Anki #sending-to-anki
 This section details the procedure for sending cards to Anki and syncing between YuMD notes and Anki.
 
 ## Preliminary Knowledge and Preparation
@@ -160,7 +165,7 @@ For a rundown on the syntax for defining flashcards, see [#defining-anki-flashca
 The `AnkiConnect` addon is required to allow YuMD to communicate with Anki, which can be obtained [here](https://ankiweb.net/shared/info/2055492159). Please leave the port `localhost:8765` reserved for `AnkiConnect`.
 
 ## Sending Notes
-Before sending notes to Anki, ***ensure that Anki is open and the `AnkiConnect` addon is installed***. It is also recommended not to have the `Browse` window open in Anki, since viewing flashcards while changes are being made can cause glitches within Anki.
+Before sending notes to Anki, ***ensure that Anki is open and the `AnkiConnect` addon is installed***. It is also recommended not having the `Browse` window open in Anki, since viewing flashcards while changes are being made can cause glitches within Anki.
 
 To send your flashcards to Anki, use the command `YuMD: Send Notes to Anki`, which can be found in the toolbar menu, shown in [#toolbar-menu], or typing `Shift+Ctrl+P` (Windows) or `Shift+Command+P` and typing "YuMD: Send Notes to Anki". It might be helpful to assign a keybinding to this.
 
@@ -200,7 +205,7 @@ To delete a flashcard, append the string `delete` *after* the note ID, as shown 
   + ![ ](2021-12-11-15-56-20.png) #ignored-flashcard
 
 Note.
-: Avoid deleting notes directly within Anki without manually changing the flashcard tag to "ignore".
+: Avoid deleting notes directly within Anki without manually changing the flashcard tag to `ignore`.
 
 
 
@@ -225,7 +230,7 @@ When using multiple `.yumd` files, the preview will by default change to render 
 Additionally in locked mode, the preview reads only what is saved to disk, updating on save, rather than on type.
 
 Tip.
-: For large documents with lots of math, or for slow computers, YuMD preview will begin lagging behind due to the slow MathJaX render. It is recommended to enable locked mode to produce previews on save, which will substantially reduce the lag. [Splitting the file](#including-other-files) and only previewing subfiles could also help.
+: For large documents with lots of math, or for slow computers, YuMD preview will begin lagging behind due to the slow MathJaX render. It is recommended enabling locked mode to produce previews on save, which will substantially reduce the lag. [Splitting the file](#including-other-files) and only previewing subfiles could also help.
 
 Note.
 : The YuMD preview is far from an exact representation of the final LaTeX output. Things like section and equation numbering are non-existent within the HTML output. Other things like table of contents can only be enabled within LaTeX output (see [#latex-configuration-options]). The preview is intended to function as a preview offering assurance that YuMD is interpreting your notes correctly and as a quick way of navigating through your notes.
@@ -243,7 +248,7 @@ Example (single and double quotes).
 ## VSCode Extension Settings
 The YuMD VSCode extension provides a small range of settings, mostly related to the preview.
 
-**It is highly recommended to change the default font**, by searching for `YuMD: Preview Font Family` within VSCode settings. The font [`"Stix Two Text"`](https://www.stixfonts.org/) is highly recommended.
+**It is highly recommended changing the default font**, by searching for `YuMD: Preview Font Family` within VSCode settings. The font [`"Stix Two Text"`](https://www.stixfonts.org/) is highly recommended.
 
 A custom CSS stylesheet is also supported if you are (undoubtedly) unhappy with the default styling offered. For purposes of brevity, a documentation of styling is not included here. Instead, we would recommend running
 ```
@@ -260,7 +265,7 @@ To compile YuMD notes into LaTeX, the VSCode extension provides the command `YuM
 /path/to/yumd/executable path/to/document.yumd --latex path/to/desired/output/directory
 ```
 
-If you do not plan to do your own post-processing, and simply want a PDF file, you an use the command `YuMD: Compile LaTeX and Create PDF`, which compiles YuMD into LaTeX and then runs `pdflatex` -> `biber` -> `pdflatex` to generate the PDF file.
+If you do not plan to do your own post-processing, and simply want a PDF file, you can use the command `YuMD: Compile LaTeX and Create PDF`, which compiles YuMD into LaTeX and then runs `pdflatex` -> `biber` -> `pdflatex` to generate the PDF file.
 
 Note.
 : When compiling into LaTeX, YuMD copies dependencies (images and bibliographies) into the target directory, preserving the directory structure.
@@ -273,7 +278,7 @@ This section details the additional components introduced by YuMD which make it 
 
 ### CommonMark Conformity
 YuMD largely conforms to the [CommonMark specification](https://spec.commonmark.org/0.29/), save for a few edge cases. In particular:
-1. unicode and html character references are not implemented,
+1. unicode and HTML character references are not implemented,
 1. tabs are always interpreted as `4` spaces, contradicting the CommonMark specification that tabs are translated into the equivalent number of spaces up to the next multiple of `4`. [#indentation] cannot be stressed enough: **all indentation in YuMD should be done using spaces to avoid unexpected results**.
 
    Proposition.
@@ -327,7 +332,7 @@ Note.
 1. `theorem` or `thm`, and
 1. `tip`.
 
-`<theorem name>` is optional must be placed in brackets after a space after the theorem type and before the period. This is useful for naming theorems and specifying terms to define, and allows for [quick flashcard creation](#implicit-theorem-flashcards). The exception here is with the proof environment, where by convention, entire "*Proof*" text is replaced with the text given in brackets. This is handy in defining your own "proof" environments.
+`<theorem name>` is optional must be placed in brackets after a space after the theorem type and before the period. This is useful for naming theorems and specifying terms to define, and allows for [quick flashcard creation](#implicit-theorem-flashcards). The exception here is with the proof environment, where, by convention, the entire "*Proof*" text is replaced with the text given in brackets. This is handy in defining your own "proof" environments.
 
 + + ```
     Theorem (Fermat's little).
@@ -403,7 +408,7 @@ Since theorems are implemented internally as a special case of [definition lists
       line to make paragraphs.
 
 ## Definition Lists #definition-lists
-Although the recommended `definition` theorem is available, you may prefer to use definition lists, the syntax for which is:
+Although the `definition` theorem is available, you may prefer to use definition lists, the syntax for which is:
 
 ```
 <term>
@@ -453,7 +458,7 @@ Multiple terms can be assigned to the same definition, multiple definitions can 
     : definitions here.
 
 ## Tables
-The area where YuMD deviates the most from other markdown implementations is with regard to tables. The [most popular method](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables), as implemented by GitHub Flavoured Markdown, uses ugly gutter characters to mark out tables, limiting yourself to plaintext in each cell. Instead, tables are defined in YuMD using two-dimentional lists. This gives the advantage of both
+The area where YuMD deviates the most from other Markdown implementations is with regard to tables. The [most popular method](https://docs.github.com/en/github/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables), as implemented by GitHub Flavoured Markdown, uses ugly gutter characters to mark out tables, limiting yourself to plaintext in each cell. Instead, tables are defined in YuMD using two-dimensional lists. This gives the advantage of both
 1. readability, and critically
 1. the flexibility to place block elements (blockquotes, lists, theorems, etc.) within tables, rather than just plaintext.
 
@@ -533,7 +538,7 @@ Note.
 : The blank line between each table entry is entirely optional. The following examples omit these blank lines.
 
 ### Headings
-If all cells of the first row contain only emphasis items (italic or strong), then the first row is interpreted as a heading row and formatted centered and bold.
+If all cells of the first row contain only emphasis items (italic or strong), then the first row is interpreted as a heading row and formatted centred and bold.
 
 + + ```
     + + **Name**
@@ -551,7 +556,7 @@ If all cells of the first row contain only emphasis items (italic or strong), th
       + 20
 
 ### Alignment Row
-Cell alignments can be defined if the very first row contains cells with text `l` or `c` or `r` or `j` depending on whether you want left-aligned, right-aligned, centered or justified columns respectively. This will align the rest of each column accordingly. By default, left alignment is used if no alignment row is given.
+Cell alignments can be defined if the very first row contains cells with text `l` or `c` or `r` or `j` depending on whether you want left-aligned, right-aligned, centred or justified columns respectively. This will align the rest of each column accordingly. By default, left alignment is used if no alignment row is given.
 
 
 + + ```
@@ -573,7 +578,7 @@ Cell alignments can be defined if the very first row contains cells with text `l
     + + Universe
       + *13.7 trillion*
 
-If a heading row is desired, it must immediately *follow* the alignment row. Heading cells are centered regardless of the specified column alignment.
+If a heading row is desired, it must immediately *follow* the alignment row. Heading cells are centred regardless of the specified column alignment.
 
 
 
@@ -764,8 +769,8 @@ Note.
     ![Art.](./pem.png) #art
 
     [The theorem](#big-thm) 
-    is important. We also
-    looking at [#big-tbl] and
+    is important. Please also
+    see [#big-tbl] and
     [this art](#art).
     ```
   + See [#my-section] for art.
@@ -784,9 +789,9 @@ Note.
     ![Art.](./pem.png) #art
 
     [The theorem](#big-thm) 
-    is important. We also
-    looking at [#big-tbl] and
-    [this art](#art).
+    is important. Please also
+    see [#big-tbl] and
+	[this art](#art).
 + + ```
     To label a figure without
     a caption, use a space as
@@ -965,7 +970,7 @@ Example.
     All variance-covariance matrices are positive semi-definite.
 
 Note.
-: YuMD disallows blank lines in math elements. This is because blank lines result in ambiguity with regard to whether the markdown is contiguous LaTeX math code or a new paragraph.
+: YuMD disallows blank lines in math elements. This is because blank lines result in ambiguity with regard to whether the Markdown is contiguous LaTeX math code or a new paragraph.
 
 Note.
 : LaTeX disallows using the `&` alignment character in alignment environments within a table. There is a workaround for this, but this is not implemented by YuMD. If necessary, this can be considered in a future update.
@@ -1024,16 +1029,16 @@ If the Inkscape binary is in the `PATH` environment variable, or alternatively i
 
 ## Unsupported: Native Code
 ### HTML Code
-Unlike standard markdown, where all HTML is treated as valid markdown, YuMD only supports partial treatment of HTML. Although printed verbatim when outputting HTML, all HTML code is typeset as a code block when outputting LaTeX. We **strongly recommend avoiding the use of raw HTML** in your YuMD files.
+Unlike standard Markdown, where all HTML is treated as valid Markdown, YuMD only supports partial treatment of HTML. Although printed verbatim when outputting HTML, all HTML code is typeset as a code block when outputting LaTeX. We **strongly recommend avoiding the use of raw HTML** in your YuMD files.
 
 ### LaTeX Code
-**Other than in [math mode](#latex-math-mode) and in the custom [LaTeX appended to the preamble](#latex-configuration-options), YuMD does not support direct LaTeX code.** All backslashes in plaintext are escaped when outputting LaTeX.
+**Other than in [math mode](#latex-math-mode) and in the [custom LaTeX appended to the preamble](#latex-configuration-options), YuMD does not support direct LaTeX code.** Backslashes are escaped when outputting LaTeX.
 
 
 # Defining Anki Flashcards #defining-anki-flashcards
-A core function of YuMD is to allow seemless creation of flashcards from within your notes, syncing them to Anki. YuMD offers a plethora of ways to set out flashcards, so it is well worth reading this entire section. Once you have written your flashcards, [#sending-to-anki] details how to sync them with Anki.
+A core function of YuMD is to allow seamless creation of flashcards from within your notes, syncing them to Anki. YuMD offers a plethora of ways to set out flashcards, so it is well worth reading this entire section. Once you have written your flashcards, [#sending-to-anki] details how to sync them with Anki.
 
-The easiest way to introduce flashcard syntax is probabily to begin with the most verbose, before covering the shorter and more succinct syntax which allow for much more rapid flashcard creation.
+The easiest way to introduce flashcard syntax is to begin with the most verbose, before covering the shorter and more succinct syntax which allow for much more rapid and intuitive flashcard creation.
 
 ## Explicit Flashcard Generation
 Flashcards can be generated explicitly by using the syntax
@@ -1055,7 +1060,7 @@ The content of the flashcard must be indented by at least 2 spaces.
 
 Crucially, `<deck name>` and `<note type>` must exist. By design, YuMD does not create decks/note types if they do not exist, as this could lead to accidental creation in the case of typos. Create your decks and note types before sending your flashcards to Anki (or stick with the defaults --- read below).
 
-The field separaters `---` can be as long as you want, and can contain spaces, but crucially must have at least 1 hyphen on both sides. The following code is therefore valid:
+The field separators `---` can be as long as you want, and can contain spaces, but crucially must have at least 1 hyphen on both sides. The following code is therefore valid:
 ```
 Deck::Note Type
   --------Field 1---------
@@ -1230,7 +1235,7 @@ Note.
   + ![](2021-12-14-11-47-12.png)
 
 ### Fallback
-If `<note type>` is left blank and YuMD does not regonize a cloze, theorem, or definition list, it will default to note type `Basic`. This can be changed by using configuration
+If `<note type>` is left blank and YuMD does not recognize a cloze, theorem, or definition list, it will default to note type `Basic`. This can be changed by using configuration
 ```
 ---
 anki:
@@ -1503,7 +1508,7 @@ ccode: C0001
 subject: Economics
 lecturer: Milton Friedman
 author: James Yu
-season: Michealmas
+season: Michaelmas
 part: I
 date: 2021-01-01
 date-end: 2021-12-14
@@ -1554,17 +1559,17 @@ latex:
 
   - The title of the document.
 
-  - Self-explanatory. Blasphemous as it is, `season` is intended to refer to the term, eg. "Michealmas 2021".
+  - Self-explanatory. Blasphemous as it is, `season` is intended to refer to the term, e.g. "Michaelmas 2021".
 
   - Must be formatted in big-endian form `YYYY-MM-DD` to allow it to be printed nicely in LaTeX and HTML.
 
-  - Specify the level of heading corresponding to a single-hash heading, eg. `# Heading`.
+  - Specify the level of heading corresponding to a single-hash heading, e.g. `# Heading`.
 
   - Specify the path to included bibliographies. Can be a string or an array of strings for multiple bibliographies.
 
   - 1. If set to `always`, YuMD will format flashcards as tables with label in the first column and content in the second column.
     1. If set to `auto`, YuMD will format flashcards as a table if there are two or more fields and at least one of them is named.
-    1. If set to `never` YuMD will output flachards as normal document body content.
+    1. If set to `never` YuMD will output flashcards as normal document body content.
   
   - Specify whether to use [smartypants replacements](#smartypants-replacements).
 
@@ -1573,7 +1578,7 @@ latex:
   - `language` (default: `british`)
 - - Specify the citation style. YuMD only considers `cite-style` specified in the root document and applies it to all included `.yumd` files.
   
-  - Currently only used in LaTeX output to specify the language for `babel`, but may play a larger role in future.
+  - This is currently only used in LaTeX output to specify the language for `babel`, but may play a larger role in future.
 
 ## HTML Output-Specific Options
 + + ```
@@ -1633,8 +1638,7 @@ Tip.
 
   - Specify the note type when YuMD infers that we have a cloze, theorem or definition list flashcard, or cannot infer.
 
-# Appendix
-## Command Line
+# Appendix #appendix
 For advanced users, directly using the command line may be more useful. Use option `--help` to print the available routines.
 ```
 Options for Yu's Markdown:
@@ -1655,7 +1659,7 @@ Options for Yu's Markdown:
                                 sending media from WSL.
   -l [ --latex ] arg            write LaTeX file(s)
   -d [ --source-data ] arg      write JSON source data
-  -i [ --input ] arg            specify the markdown file to parse
+  -i [ --input ] arg            specify the Markdown file to parse
   -a [ --ast ] arg              print the AST generated by the parser
                                 (for debugging purposes)
   -o [ --override ] arg         specify the override text for the root
@@ -1666,8 +1670,11 @@ Options for Yu's Markdown:
 
 
 ## Quality of Life Improvements
-### Physics Package Support in Anki #loading-physics-in-anki
-Replace it with this code
+### `physics` Package Support in Anki #loading-physics-in-anki
+To enable `physics` package support in Anki, navigate first to Anki's installation directory. On Windows, this is located by default at `C:\Program Files\Anki`. On macOS, Anki is likely to be located under `/Applications`; right click on `Anki.app`, select `Show Package Contents` and navigate to `Resources`.
+
+Once in Anki's installation directory on either platform, open "aqt_data/web/js/mathjax.js" and replace its contents with the following:
+
 ```
 window.MathJax = {
     tex: {
@@ -1698,11 +1705,13 @@ window.MathJax = {
 };
 ```
 
-## Increasing Polling Speed by AnkiConnect
-addons21/2055492159/util.py
+Note.
+: This is only a "temporary" workaround and must be applied every time Anki is updated (until the Anki developers finally enable the `physics` package by default), since `mathjax.js` will be overwritten upon each update. 
 
-around line 21`
-`'apiPollInterval': 25` to `'apiPollInterval': 1` 
+### Increasing Polling Speed by AnkiConnect
+If you have hundreds of flashcards to send, you will notice that sending flashcards will take considerable time. This is because the `AnkiConnect` addon's default polling interval is quite long. To change this, navigate to Anki's addon directory, which by default is located at `C:\Users\%USERNAME%\AppData\Roaming\Anki2\addons21` in Windows, and at `~/Library/Application Support/Anki2/addons21` in macOS.
+
+Once here, open `2055492159/util.py` and locate the line containing `'apiPollInterval': 25`. Change this to `'apiPollInterval': 1`, which will *hugely* speed up the card sending/updating process.
 
 ## Smartypants Replacements
 + + **Sequence**
@@ -1745,20 +1754,20 @@ around line 21`
 + + `--`
   + -- (en-dash)
 + + `...`
-  + ... (elipses)
+  + ... (ellipses)
 + + `+-`
   + +-
 + + Smartypants replacements. #smartypants-replacements
 
 ## Known Issues and Annoyances #known-issues
 There are a plethora of issues in YuMD and in the VSCode extension.
-1. The biggest cosmetic problem is the syntax highlighting. Although it offers a rudimentary styling of YuMD code, the flexibility of markdown means that the syntax highlighting is often inaccurate for more complex document structures. It even breaks for simple things like spaces in citation before/after text. **Whenever the syntax highlighting breaks, this is not an indication of a mistake by you. Check the preview for a more accurate confirmation that YuMD is parsing your document correctly**.
+1. The biggest cosmetic problem is the syntax highlighting. Although it offers a rudimentary styling of YuMD code, the flexibility of Markdown means that the syntax highlighting is often inaccurate for more complex document structures. It even breaks for simple things like spaces in citation before/after text. **Whenever the syntax highlighting breaks, this is not an indication of a mistake by you. Check the preview for a more accurate confirmation that YuMD is parsing your document correctly**.
 1. Big documents hugely slow down the HTML preview. This is a combination of the web renderer with VSCode being very slow and it being impossible to incrementally update the preview --- the entire document must be refreshed on every change.
 1. Scroll sync is sometimes derpy.
 1. The HTML preview is not a complete reflection of the LaTeX output. Some things may be laid out differently, and some things that look perfectly fine in HTML may result in an error from LaTeX (like footnotes within a caption).
 1. All equations in LaTeX output are numbered, while no equations are numbered in HTML.
 1. You have to close and reopen the preview whenever a change in styling is made.
-1. The preamble is hardcoded, although it is possible to [append a custom preamble to this](#latex-configuration-options).
+1. The preamble is hardcoded, although it is possible to [append custom LaTeX code](#latex-configuration-options) after the hardcoded preamble.
 
 
 ## Hardcoded Preamble #preamble
