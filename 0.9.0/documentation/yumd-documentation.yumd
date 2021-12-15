@@ -92,7 +92,7 @@ Example (the importance of correct indentation).
             : while this will.
 
 Example.
-: This documentation is itself created purely using YuMD. A skim through the [`.yumd` source](https://github.com/fiercedeity-productions/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.yumd) can prove very helpful in quickly familiarising yourself with the versatility of YuMD despite its simplicity.[^unfortunately, copying and pasting code from this PDF won't preserve spacing, but feel free to use the `.yumd` source as a reference.]
+: This documentation is itself created purely using YuMD. A skim through the [`.yumd` source](https://github.com/james-b-yu/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.yumd) can prove very helpful in quickly familiarising yourself with the versatility of YuMD despite its simplicity.[^unfortunately, copying and pasting code from this PDF won't preserve spacing, but feel free to use the `.yumd` source as a reference.]
 
 Tip.
 : If line wrapping is enabled in the text editor, levels of displayed indentation could become misleading. It is recommended setting the VSCode setting `Editor: Render Whitespaces` to `selection` to help identify the actual number of spaces in the file.
@@ -142,7 +142,7 @@ As a computer program, YuMD is a C++ library compiled for Windows (`yumd.dll`) a
 1. an executable (`yumd.exe` and `yumd_osx_intel`),[^I am lying. The extension also ships with a version compiled for Ubuntu on WSL (the library `libyumd.so` and executable `yumd`). It is highly recommended ignoring this.] which provides a command-line interface[^see [#appendix]] to this library, and
 1. a VSCode extension (`yumd.vsix`).
 
-The binaries and VSCode extension can be obtained freely [here](https://github.com/fiercedeity-productions/yumd-public), although source code is not public for now.
+The binaries and VSCode extension can be obtained freely [here](https://github.com/james-b-yu/yumd-public), although source code is not public for now.
 
 The VSCode extension uses both the library and the executable to provide:
 1. real-time scroll-syncing preview with source mapping,
