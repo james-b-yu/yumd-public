@@ -59,7 +59,7 @@ Example (the importance of correct indentation).
             Proposition.
           : This will not work
 
-            Proposition
+            Proposition.
             : while this will.
     ```
   + 1. a list
@@ -88,7 +88,7 @@ Example (the importance of correct indentation).
             Proposition.
           : This will not work
 
-            Proposition
+            Proposition.
             : while this will.
 
 Example.
@@ -110,7 +110,7 @@ Proposition (Trilemma of notetaking). #trilemma
   1. creation of flashcards
   1. fast notetaking with support for complex elements including tables, theorems, figures, etc.
 
-Proof (Partial disproof).
+Proof (Disproof (?)).
 : While highly imperfect, and undoubtedly full of small bugs, YuMD attempts to solve this.
 
 Existing solutions only allow for up to two conditions in [#trilemma] at one time:
