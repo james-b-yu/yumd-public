@@ -1807,6 +1807,7 @@ Below is the preamble with which YuMD begins every root `.tex` document (written
 \usepackage{float} %% for H option in table
 \usepackage{parskip} %% remove indentation on new paragraphs
 \usepackage{caption}
+\usepackage[export]{adjustbox} %% allow max width
 \usepackage{graphbox} %% allow align=t in \includegraphics to make them work better in minipages if first item
 
 \MakeOuterQuote{"}
@@ -1886,12 +1887,7 @@ Below is the preamble with which YuMD begins every root `.tex` document (written
 
 \providecommand{\tightlist}{%%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-
-%% provide maxwidth option for includegraphics
-\makeatletter
-\def\maxwidth#1{\ifdim\Gin@nat@width>#1 #1\else\Gin@nat@width\fi}
-\makeatother
-
+  
 %% fix parskip within minipage
 \setlength{\parskip}{\medskipamount}
 \makeatletter
