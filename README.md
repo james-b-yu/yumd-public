@@ -8,7 +8,10 @@ YuMD is an extension of Markdown allowing for the typesetting of rich and comple
 The documentation for YuMD is itself written in YuMD, and can be viewed [as a PDF](https://nbviewer.org/github/james-b-yu/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.pdf), or [as YuMD source code](https://github.com/james-b-yu/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.yumd).
 
 # Installation
-To install the VSCode extension, download and unzip the [latest release](https://github.com/james-b-yu/yumd-public/releases) of YuMD. **You only need `vscode-extension.zip` if you plan to use YuMD with VSCode.**
+
+## The easiest way to install and use YuMD is to download [Visual Studio Code](https://code.visualstudio.com/) and search for the extension [`YuMD for Visual Studio Code`](https://marketplace.visualstudio.com/items?itemName=JamesBYu.yumd) in the marketplace.
+
+To install the VSCode extension the hard way, download and unzip the [latest release](https://github.com/james-b-yu/yumd-public/releases) of YuMD. **You only need `vscode-extension.zip` if you plan to use YuMD with VSCode.**
 
 After unzipping, open VSCode, run the command (`Ctrl+Shift+P` or `Command+Shift+P`) `Extensions: Install from VSIX...`, and navigate to `yumd.vsix`.
 
