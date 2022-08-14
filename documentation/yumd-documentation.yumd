@@ -138,8 +138,8 @@ Note.
 ## What?
 The term YuMD refers broadly to the notetaking system outlined above. Physically, it refers to the file type `.yumd` (although all text files are accepted by YuMD regardless of the extension), and its physical manifestation as a computer program.
 
-As a computer program, YuMD is a C++ library compiled for Windows (`yumd.dll`) and macOS (`libyumd_osx_intel.dylib`). YuMD ships with:
-1. an executable (`yumd.exe` and `yumd_osx_intel`),[^I am lying. The extension also ships with a version compiled for Ubuntu on WSL (the library `libyumd.so` and executable `yumd`). It is highly recommended ignoring this.] which provides a command-line interface[^see [#appendix]] to this library, and
+As a computer program, YuMD is a C++ library compiled for Windows (`yumd.dll`) and macOS (`libyumd_osx_intel.dylib` or `libyumd_arm64.dylib`). YuMD ships with:
+1. an executable (`yumd.exe` and `yumd_osx_intel` or `yumd_arm64`),[^I am lying. The extension also ships with a version compiled for Ubuntu on WSL (the library `libyumd.so` and executable `yumd`). It is highly recommended ignoring this.] which provides a command-line interface[^see [#appendix]] to this library, and
 1. a VSCode extension (`yumd.vsix`).
 
 The binaries and VSCode extension can be obtained freely [here](https://github.com/james-b-yu/yumd-public), although source code is not public for now.
@@ -153,9 +153,6 @@ The VSCode extension uses both the library and the executable to provide:
 
 Note.
 : For now, YuMD will stay closed-source, but this decision is open for review in future.
-
-Note.
-: There is no current plan to compile native binaries for Apple Silicon. Macs with Apple Silicon should nonetheless be able to run the Intel binaries through the Rosetta 2 compatibility layer.
 
 # Syncing Notes with Anki #sending-to-anki
 This section details the procedure for sending cards to Anki and syncing between YuMD notes and Anki.
@@ -1894,3 +1891,7 @@ Below is the preamble with which YuMD begins every root `.tex` document (written
 \newcommand{\@minipagerestore}{\setlength{\parskip}{\medskipamount}}
 \makeatother
 ```
+
+## Changelog 0.9.1
+1. Added support for macOS computers running Apple Silicon chips. 
+1. Fixed error which caused segmentation faults while parsing edge-cases such as `_*_hello_*_`.
