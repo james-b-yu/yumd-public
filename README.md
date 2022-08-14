@@ -17,4 +17,4 @@ After unzipping, open VSCode, run the command (`Ctrl+Shift+P` or `Command+Shift+
 
 Open a `.yumd` file and begin notetaking!
 
-Please read through [the documentation](https://nbviewer.org/github/james-b-yu/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.pdf) for a primer on how to use YuMD. Reading through the [`.yumd` source of the documentation](https://github.com/james-b-yu/yumd-public/blob/main/0.9.0/documentation/yumd-documentation.yumd) could be even more informative, by getting familiar with YuMD syntax as you read.
+Please read through [the documentation](https://nbviewer.org/github/james-b-yu/yumd-public/blob/main/documentation/yumd-documentation.pdf) for a primer on how to use YuMD. Reading through the [`.yumd` source of the documentation](https://github.com/james-b-yu/yumd-public/blob/main/documentation/yumd-documentation.yumd) could be even more informative, by getting familiar with YuMD syntax as you read.
