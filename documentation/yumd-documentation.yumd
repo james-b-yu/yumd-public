@@ -1892,6 +1892,5 @@ Below is the preamble with which YuMD begins every root `.tex` document (written
 \makeatother
 ```
 
-## Changelog 0.9.1
-1. Added support for macOS computers running Apple Silicon chips. 
-1. Fixed error which caused segmentation faults while parsing edge-cases such as `_*_hello_*_`.
+## Changelog 0.9.2
+1. Fixed LaTeX output using root folder as parent when including svg in same folder as yumd file.
